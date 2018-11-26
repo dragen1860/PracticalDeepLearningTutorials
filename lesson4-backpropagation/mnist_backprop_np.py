@@ -5,7 +5,10 @@ import  mnist
 
 
 def sigmoid(z):
-    """The sigmoid function."""
+    """
+    The sigmoid function.
+     [30/10, 1]
+    """
     return 1.0/(1.0+np.exp(-z))
 
 def sigmoid_prime(z):
@@ -35,16 +38,18 @@ class Network:
         self.biases = [np.random.randn(ch_out, 1) for ch_out in sizes[1:]]
         # [ch_out, ch_in]
         self.weights = [np.random.randn(ch_out, ch_in)
-                        for ch_in, ch_out in zip(sizes[:-1], sizes[1:])]
+                            for ch_in, ch_out in zip(sizes[:-1], sizes[1:])]
 
     def forward(self, x):
         """
 
-        :param x: [b, ch]
-        :return:
+        :param x: [784, 1]
+        :return: [30, 1]
         """
 
         for b, w in zip(self.biases, self.weights):
+            # [30, 784]@[784, 1] + [30, 1]=> [30, 1]
+            # [10, 30]@[30, 1] + [10, 1]=> [10, 1]
             x = sigmoid(np.dot(w, x)+b)
         return x
 
@@ -70,6 +75,7 @@ class Network:
                 training_data[k:k+mini_batch_size]
                 for k in range(0, n, mini_batch_size)]
 
+            # for every (x,y)
             for mini_batch in mini_batches:
                 loss = self.update_mini_batch(mini_batch, eta)
             if test_data:
@@ -95,6 +101,11 @@ class Network:
             nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
             nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
             loss += loss_
+
+        # tmp1 = [np.linalg.norm(b/len(mini_batch)) for b in nabla_b]
+        # tmp2 = [np.linalg.norm(w/len(mini_batch)) for w in nabla_w]
+        # print(tmp1)
+        # print(tmp2)
 
         self.weights = [w-(eta/len(mini_batch))*nw
                         for w, nw in zip(self.weights, nabla_w)]
@@ -132,11 +143,14 @@ class Network:
         loss = np.power(activations[-1]-y, 2).sum()
 
         # 2. backward
-        # (Ok-tk)*(1-O) [10] - [10] * [10]
-        delta = self.cost_derivative(activations[-1], y) * sigmoid_prime(zs[-1])
+        # (Ok-tk)*(1-Ok)*Ok
+        # [10] - [10] * [10]
+        delta = self.cost_prime(activations[-1], y) * sigmoid_prime(zs[-1]) # sigmoid(z)*(1-sigmoid(z))
+        # O_j*Delta_k
         # [10]
         nabla_b[-1] = delta
-        # [10, 256] = [10] @ [256]
+        # deltaj * Oi
+        # [10] @ [30, 1]^T => [10, 30]
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
         # Note that the variable l in the loop below is used a little
         # differently to the notation in Chapter 2 of the book.  Here,
@@ -145,8 +159,11 @@ class Network:
         # scheme in the book, used here to take advantage of the fact
         # that Python can use negative indices in lists.
         for l in range(2, self.num_layers):
+            # [30, 1]
             z = zs[-l]
             sp = sigmoid_prime(z)
+            # sum()
+            # [10, 30] => [30, 10] @ [10, 1] => [30, 1] * [30, 1]
             delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
             nabla_b[-l] = delta
             nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
@@ -164,7 +181,7 @@ class Network:
                         for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)
 
-    def cost_derivative(self, output_activations, y):
+    def cost_prime(self, output_activations, y):
         """
         Return the vector of partial derivatives \partial C_x /
         \partial a for the output activations.
@@ -180,11 +197,12 @@ def main():
     # (50000, 784) (50000, 10) (10000, 784) (10000, 10)
     print('x_train, y_train, x_test, y_test:', x_train.shape, y_train.shape, x_test.shape, y_test.shape)
 
+    np.random.seed(66)
 
     model = Network([784, 30, 10])
     data_train = list(zip(x_train, y_train))
     data_test = list(zip(x_test, y_test))
-    model.SGD(data_train, 10000, 64, 0.01, data_test)
+    model.SGD(data_train, 10000, 10, 0.1, data_test)
 
 
 
