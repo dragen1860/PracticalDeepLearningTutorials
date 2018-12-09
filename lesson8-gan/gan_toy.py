@@ -233,30 +233,27 @@ viz.line([[0, 0]], [0], win='loss', opts=dict(title='loss',
 for iteration in range(ITERS):
 
     for iter_d in range(CRITIC_ITERS):
-        x = next(data)
-        xr = torch.from_numpy(x).cuda()
-
-        netD.zero_grad()
+        xr = next(data)
+        xr = torch.from_numpy(xr).cuda()
 
         # train with real
-        D_real = netD(real_data)
+        D_real = netD(xr)
         D_real = D_real.mean()
-        D_real.backward(mone)
 
         # train with fake
         noise = torch.randn(BATCH_SIZE, 2).cuda()
-        fake = netG(noise, real_data).detach()
+        fake = netG(noise, xr).detach()
         D_fake = netD(fake)
         D_fake = D_fake.mean()
-        D_fake.backward(one)
 
         # train with gradient penalty
-        gradient_penalty = calc_gradient_penalty(netD, real_data.data, fake.data)
-        gradient_penalty.backward()
-        optimizerD.step()
+        gradient_penalty = calc_gradient_penalty(netD, xr.data, fake.data)
 
-        D_cost = D_fake - D_real + gradient_penalty
-        Wasserstein_D = D_real - D_fake
+        loss_D = D_fake - D_real + gradient_penalty
+        # Wasserstein_D = D_real - D_fake
+        netD.zero_grad()
+        loss_D.backward()
+        optimizerD.step()
 
     # train G
     x = next(data)
@@ -272,7 +269,7 @@ for iteration in range(ITERS):
 
 
     if iteration % 100 == 0:
-        viz.line([[D_cost.item(), loss_G.item()]], [iteration], win='loss', update='append')
-        generate_image(_data)
+        viz.line([[loss_D.item(), loss_G.item()]], [iteration], win='loss', update='append')
+        generate_image(x)
 
 

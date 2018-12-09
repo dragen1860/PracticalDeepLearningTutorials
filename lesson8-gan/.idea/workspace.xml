@@ -27,8 +27,8 @@
       <file leaf-file-name="gan_toy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gan_toy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="235" column="22" lean-forward="true" selection-start-line="235" selection-start-column="22" selection-end-line="235" selection-end-column="22" />
+            <state relative-caret-position="576">
+              <caret line="271" column="25" selection-start-line="271" selection-start-column="25" selection-end-line="271" selection-end-column="25" />
               <folding>
                 <element signature="e#3719#5471#0" />
               </folding>
@@ -281,8 +281,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gan_toy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="235" column="22" lean-forward="true" selection-start-line="235" selection-start-column="22" selection-end-line="235" selection-end-column="22" />
+        <state relative-caret-position="576">
+          <caret line="271" column="25" selection-start-line="271" selection-start-column="25" selection-end-line="271" selection-end-column="25" />
           <folding>
             <element signature="e#3719#5471#0" />
           </folding>
