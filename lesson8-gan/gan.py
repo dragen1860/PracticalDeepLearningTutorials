@@ -6,8 +6,8 @@ from    torch.nn import functional as F
 from    matplotlib import pyplot as plt
 import  random
 
-h_dim = 512
-batchsz = 256
+h_dim = 400
+batchsz = 512
 viz = visdom.Visdom()
 
 class Generator(nn.Module):
@@ -51,7 +51,6 @@ class Discriminator(nn.Module):
         return output.view(-1)
 
 def data_generator():
-    dataset = []
 
     scale = 2.
     centers = [
@@ -103,6 +102,7 @@ def generate_image(D, G, xr, epoch):
     """
     N_POINTS = 128
     RANGE = 3
+    plt.clf()
 
     points = np.zeros((N_POINTS, N_POINTS, 2), dtype='float32')
     points[:, :, 0] = np.linspace(-RANGE, RANGE, N_POINTS)[:, None]
@@ -116,7 +116,9 @@ def generate_image(D, G, xr, epoch):
         points = torch.Tensor(points).cuda() # [16384, 2]
         disc_map = D(points).cpu().numpy() # [16384]
     x = y = np.linspace(-RANGE, RANGE, N_POINTS)
-    plt.contour(x, y, disc_map.reshape((len(x), len(y))).transpose())
+    cs = plt.contour(x, y, disc_map.reshape((len(x), len(y))).transpose())
+    plt.clabel(cs, inline=1, fontsize=10)
+    # plt.colorbar()
 
 
     # draw samples
@@ -126,18 +128,13 @@ def generate_image(D, G, xr, epoch):
     plt.scatter(xr[:, 0], xr[:, 1], c='orange', marker='.')
     plt.scatter(samples[:, 0], samples[:, 1], c='green', marker='+')
 
-    viz.matplot(plt, win='p(x)', opts=dict(title='p(x):%d'%epoch))
+    viz.matplot(plt, win='contour', opts=dict(title='p(x):%d'%epoch))
 
 
 def weights_init(m):
-    classname = m.__class__.__name__
-    if classname.find('Linear') != -1:
-        m.weight.data.normal_(0.0, 0.02)
-        # with torch.no_grad():
-        #     n
-        m.bias.data.fill_(0)
-    elif classname.find('BatchNorm') != -1:
-        m.weight.data.normal_(1.0, 0.02)
+    if isinstance(m, nn.Linear):
+        # m.weight.data.normal_(0.0, 0.02)
+        nn.init.kaiming_normal_(m.weight)
         m.bias.data.fill_(0)
 
 def gradient_penalty(D, xr, xf):
@@ -148,7 +145,7 @@ def gradient_penalty(D, xr, xf):
     :param xf:
     :return:
     """
-    LAMBDA = 0.1
+    LAMBDA = 0.3
 
     # only constrait for Discriminator
     xf = xf.detach()
@@ -173,16 +170,16 @@ def gradient_penalty(D, xr, xf):
 
 def main():
 
-    torch.manual_seed(22)
-    np.random.seed(22)
+    torch.manual_seed(23)
+    np.random.seed(23)
 
     G = Generator().cuda()
     D = Discriminator().cuda()
     G.apply(weights_init)
     D.apply(weights_init)
 
-    optim_G = optim.Adam(G.parameters(), lr=1e-4, betas=(0.5, 0.9))
-    optim_D = optim.Adam(D.parameters(), lr=1e-4, betas=(0.5, 0.9))
+    optim_G = optim.Adam(G.parameters(), lr=1e-3, betas=(0.5, 0.9))
+    optim_D = optim.Adam(D.parameters(), lr=1e-3, betas=(0.5, 0.9))
 
 
     data_iter = data_generator()
@@ -199,7 +196,7 @@ def main():
             xr = torch.from_numpy(x).cuda()
 
             # [b]
-            predr = D(xr)
+            predr = (D(xr))
             # max log(lossr)
             lossr = - (predr.mean())
 
@@ -209,7 +206,7 @@ def main():
             # [b, 2]
             xf = G(z).detach()
             # [b]
-            predf = D(xf)
+            predf = (D(xf))
             # min predf
             lossf = (predf.mean())
 
@@ -219,13 +216,15 @@ def main():
             loss_D = lossr + lossf + gp
             optim_D.zero_grad()
             loss_D.backward()
+            # for p in D.parameters():
+            #     print(p.grad.norm())
             optim_D.step()
 
 
         # 2. train Generator
         z = torch.randn(batchsz, 2).cuda()
         xf = G(z)
-        predf = D(xf)
+        predf = (D(xf))
         # max predf
         loss_G = - (predf.mean())
         optim_G.zero_grad()

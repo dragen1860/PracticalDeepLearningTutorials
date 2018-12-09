@@ -11,11 +11,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="gan.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="gan.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gan.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="506">
-              <caret line="194" selection-start-line="194" selection-end-line="194" />
+            <state relative-caret-position="536">
+              <caret line="121" lean-forward="true" selection-start-line="121" selection-end-line="121" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
                 <element signature="e#1905#1934#0" />
@@ -24,13 +24,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="gan_toy.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="gan_toy.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gan_toy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="576">
-              <caret line="271" column="25" selection-start-line="271" selection-start-column="25" selection-end-line="271" selection-end-column="25" />
+            <state relative-caret-position="596">
+              <caret line="221" column="22" lean-forward="true" selection-start-line="221" selection-start-column="22" selection-end-line="221" selection-end-column="22" />
               <folding>
-                <element signature="e#3719#5471#0" />
+                <element signature="e#3713#5450#0" />
               </folding>
             </state>
           </provider>
@@ -41,15 +41,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="81960">
               <caret line="2784" column="4" selection-start-line="2784" selection-start-column="4" selection-end-line="2784" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/conda/lib/python3.6/site-packages/visdom/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="28260">
-              <caret line="969" column="8" selection-start-line="969" selection-start-column="8" selection-end-line="969" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -71,16 +62,18 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>DIM</find>
+      <find>BATCH_SIZE</find>
     </findStrings>
     <replaceStrings>
       <replace>h_dim</replace>
+      <replace>batchsz</replace>
     </replaceStrings>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/gan.py" />
         <option value="$PROJECT_DIR$/gan_toy.py" />
+        <option value="$PROJECT_DIR$/gan.py" />
       </list>
     </option>
   </component>
@@ -268,23 +261,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gan.py">
+    <entry file="file://$PROJECT_DIR$/gan_toy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="194" selection-start-line="194" selection-end-line="194" />
+        <state relative-caret-position="596">
+          <caret line="221" column="22" lean-forward="true" selection-start-line="221" selection-start-column="22" selection-end-line="221" selection-end-column="22" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#1905#1934#0" />
+            <element signature="e#3713#5450#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gan_toy.py">
+    <entry file="file://$USER_HOME$/conda/lib/python3.6/site-packages/torch/autograd/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
-          <caret line="271" column="25" selection-start-line="271" selection-start-column="25" selection-end-line="271" selection-end-column="25" />
+        <state relative-caret-position="35">
+          <caret line="92" column="4" selection-start-line="92" selection-start-column="4" selection-end-line="92" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gan.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="536">
+          <caret line="121" lean-forward="true" selection-start-line="121" selection-end-line="121" />
           <folding>
-            <element signature="e#3719#5471#0" />
+            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#1905#1934#0" />
           </folding>
         </state>
       </provider>
