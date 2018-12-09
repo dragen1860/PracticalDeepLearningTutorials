@@ -11,26 +11,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="gan.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="gan.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gan.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="536">
-              <caret line="121" lean-forward="true" selection-start-line="121" selection-end-line="121" />
+            <state relative-caret-position="56">
+              <caret line="105" lean-forward="true" selection-start-line="105" selection-end-line="105" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
                 <element signature="e#1905#1934#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gan_toy.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gan_toy.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="596">
-              <caret line="221" column="22" lean-forward="true" selection-start-line="221" selection-start-column="22" selection-end-line="221" selection-end-column="22" />
-              <folding>
-                <element signature="e#3713#5450#0" />
               </folding>
             </state>
           </provider>
@@ -45,9 +33,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="wgan_gp.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="wgan_gp.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wgan_gp.py">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="830">
+              <caret line="247" column="10" selection-start-line="247" selection-start-column="10" selection-end-line="247" selection-end-column="10" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+                <element signature="e#1898#1927#0" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -74,6 +70,7 @@
       <list>
         <option value="$PROJECT_DIR$/gan_toy.py" />
         <option value="$PROJECT_DIR$/gan.py" />
+        <option value="$PROJECT_DIR$/wgan_gp.py" />
       </list>
     </option>
   </component>
@@ -242,10 +239,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wgan_gp.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wgan_gp.py">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#1898#1927#0" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$USER_HOME$/conda/lib/python3.6/site-packages/visdom/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -280,11 +281,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gan.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="536">
-          <caret line="121" lean-forward="true" selection-start-line="121" selection-end-line="121" />
+        <state relative-caret-position="56">
+          <caret line="105" lean-forward="true" selection-start-line="105" selection-end-line="105" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
             <element signature="e#1905#1934#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wgan_gp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="830">
+          <caret line="247" column="10" selection-start-line="247" selection-start-column="10" selection-end-line="247" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#1898#1927#0" />
           </folding>
         </state>
       </provider>
