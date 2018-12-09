@@ -24,12 +24,12 @@ torch.manual_seed(1)
 
 MODE = 'wgan-gp'  # wgan or wgan-gp
 DATASET = '8gaussians'  # 8gaussians, 25gaussians, swissroll
-DIM = 512  # Model dimensionality
+DIM = 256  # Model dimensionality
 FIXED_GENERATOR = False  # whether to hold the generator fixed at real data plus
 # Gaussian noise, as in the plots in the paper
 LAMBDA = .1  # Smaller lambda seems to help for toy tasks specifically
-CRITIC_ITERS = 1  # How many critic iterations per generator iteration
-BATCH_SIZE = 256  # Batch size
+CRITIC_ITERS = 5  # How many critic iterations per generator iteration
+BATCH_SIZE = 512  # Batch size
 ITERS = 100000  # how many generator iterations to train for
 use_cuda = True
 viz = visdom.Visdom()
@@ -121,7 +121,7 @@ def generate_image(true_dist):
     x = y = np.linspace(-RANGE, RANGE, N_POINTS)
     plt.contour(x, y, disc_map.reshape((len(x), len(y))).transpose())
 
-    plt.scatter(true_dist[:, 0], true_dist[:, 1], c='orange', marker='+')
+    plt.scatter(true_dist[:, 0], true_dist[:, 1], c='orange', marker='.')
     if not FIXED_GENERATOR:
         plt.scatter(samples[:, 0], samples[:, 1], c='green', marker='+')
 
@@ -212,16 +212,16 @@ def calc_gradient_penalty(netD, real_data, fake_data):
 # ==================Definition End======================
 
 
-torch.manual_seed(1)
-np.random.seed(1)
+torch.manual_seed(23)
+np.random.seed(23)
 netG = Generator().cuda()
 netD = Discriminator().cuda()
 netD.apply(weights_init)
 netG.apply(weights_init)
 
 
-optimizerD = optim.Adam(netD.parameters(), lr=1e-4, betas=(0.5, 0.9), weight_decay=0.00)
-optimizerG = optim.Adam(netG.parameters(), lr=1e-4, betas=(0.5, 0.9), weight_decay=0.00)
+optimizerD = optim.Adam(netD.parameters(), lr=5e-4, betas=(0.5, 0.9), weight_decay=0.00)
+optimizerG = optim.Adam(netG.parameters(), lr=5e-4, betas=(0.5, 0.9), weight_decay=0.00)
 
 one = torch.tensor(1.).cuda()
 mone = one * -1
@@ -231,72 +231,48 @@ viz.line([[0, 0]], [0], win='loss', opts=dict(title='loss',
                                               legend=['D', 'G']))
 
 for iteration in range(ITERS):
-    ############################
-    # (1) Update D network
-    ###########################
-    for p in netD.parameters():  # reset requires_grad
-        p.requires_grad = True  # they are set to False below in netG update
 
     for iter_d in range(CRITIC_ITERS):
-        _data = next(data)
-        real_data = torch.Tensor(_data)
-        if use_cuda:
-            real_data = real_data.cuda()
-        real_data_v = autograd.Variable(real_data)
+        x = next(data)
+        xr = torch.from_numpy(x).cuda()
 
         netD.zero_grad()
 
         # train with real
-        D_real = netD(real_data_v)
+        D_real = netD(real_data)
         D_real = D_real.mean()
         D_real.backward(mone)
 
         # train with fake
-        noise = torch.randn(BATCH_SIZE, 2)
-        if use_cuda:
-            noise = noise.cuda()
-        noisev = autograd.Variable(noise, volatile=True)  # totally freeze netG
-        fake = autograd.Variable(netG(noisev, real_data_v).data)
-        inputv = fake
-        D_fake = netD(inputv)
+        noise = torch.randn(BATCH_SIZE, 2).cuda()
+        fake = netG(noise, real_data).detach()
+        D_fake = netD(fake)
         D_fake = D_fake.mean()
         D_fake.backward(one)
 
         # train with gradient penalty
-        gradient_penalty = calc_gradient_penalty(netD, real_data_v.data, fake.data)
+        gradient_penalty = calc_gradient_penalty(netD, real_data.data, fake.data)
         gradient_penalty.backward()
+        optimizerD.step()
 
         D_cost = D_fake - D_real + gradient_penalty
         Wasserstein_D = D_real - D_fake
-        optimizerD.step()
 
-    if not FIXED_GENERATOR:
-        ############################
-        # (2) Update G network
-        ###########################
-        for p in netD.parameters():
-            p.requires_grad = False  # to avoid computation
-        netG.zero_grad()
+    # train G
+    x = next(data)
+    real_data = torch.from_numpy(x).cuda()
 
-        _data = next(data)
-        real_data = torch.Tensor(_data)
-        if use_cuda:
-            real_data = real_data.cuda()
-        real_data_v = autograd.Variable(real_data)
+    noise = torch.randn(BATCH_SIZE, 2).cuda()
+    fake = netG(noise, real_data)
+    loss_G = netD(fake).mean()
 
-        noise = torch.randn(BATCH_SIZE, 2)
-        if use_cuda:
-            noise = noise.cuda()
-        noisev = autograd.Variable(noise)
-        fake = netG(noisev, real_data_v)
-        G = netD(fake)
-        G = G.mean()
-        G.backward(mone)
-        G_cost = -G
-        optimizerG.step()
+    netG.zero_grad()
+    loss_G.backward(mone)
+    optimizerG.step()
 
 
-    if iteration % 300 == 0:
-        viz.line([[D_cost.item(), G_cost.item()]], [iteration], win='loss', update='append')
+    if iteration % 100 == 0:
+        viz.line([[D_cost.item(), loss_G.item()]], [iteration], win='loss', update='append')
         generate_image(_data)
+
 
