@@ -295,14 +295,8 @@ for iteration in range(ITERS):
         G_cost = -G
         optimizerG.step()
 
-    # # Write logs and save samples
-    # lib.plot.plot('tmp/' + DATASET + '/' + 'disc cost', D_cost.cpu().data.numpy())
-    # lib.plot.plot('tmp/' + DATASET + '/' + 'wasserstein distance', Wasserstein_D.cpu().data.numpy())
-    # if not FIXED_GENERATOR:
-    #     lib.plot.plot('tmp/' + DATASET + '/' + 'gen cost', G_cost.cpu().data.numpy())
 
-    viz.line([[D_cost.item(), G_cost.item()]], [iteration], win='loss', update='append')
-    if iteration % 500 == 99:
-        # lib.plot.flush()
+    if iteration % 300 == 0:
+        viz.line([[D_cost.item(), G_cost.item()]], [iteration], win='loss', update='append')
         generate_image(_data)
 
